@@ -1,6 +1,6 @@
 package quotes;
 
-public class Quotes {
+public class Quote {
     String author;
     String text;
 

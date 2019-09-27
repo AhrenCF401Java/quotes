@@ -17,7 +17,7 @@ public class AppTest {
 
     @Test
     public void gsonifyTest() throws IOException {
-        Quotes[] quotes = App.gsonify("src/main/resources/happyFile.json");
+        Quote[] quotes = App.gsonify("src/main/resources/happyFile.json");
         assertEquals(
                 "A quote for bed time:  “I am good, but not an angel. I do sin, but I am not the devil. I am just a small girl in a big world trying to find someone to love.”  By: Marilyn Monroe",
                 quotes[0].toString()
