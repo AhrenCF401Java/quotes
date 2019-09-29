@@ -14,12 +14,12 @@ public class AppTest {
         App classUnderTest = new App();
         assertNotNull("app should have a greeting", classUnderTest.getGreeting());
     }
-
+// seems Test no longer works after implementing FileOutStream. i does not like the “ character. could parse file and delete all “
     @Test
     public void gsonifyTest() throws IOException {
         Quote[] quotes = App.gsonify("src/main/resources/happyFile.json");
         assertEquals(
-                "A quote for bed time:  “I am good, but not an angel. I do sin, but I am not the devil. I am just a small girl in a big world trying to find someone to love.”  By: Marilyn Monroe",
+                " “I am good, but not an angel. I do sin, but I am not the devil. I am just a small girl in a big world trying to find someone to love.” - Marilyn Monroe",
                 quotes[0].toString()
         );
     }

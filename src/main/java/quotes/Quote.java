@@ -5,7 +5,7 @@ public class Quote {
     String text;
 
     public String toString(){
-        return "A quote for bed time: "+ this.text + " By: "+ this.author;
+        return this.text + " - "+ this.author;
     }
 
 }
