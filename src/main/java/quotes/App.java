@@ -4,12 +4,8 @@
 package quotes;
 import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
+import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,7 +17,7 @@ public class App {
     public static void main(String[] args) throws IOException {
         Quote[] quotes = gsonify("src/main/resources/happyFile.json");
         int indici = (int)(Math.random()*quotes.length);
-        addQuote(quotes, getStarWarsQuote());
+        addQuote(quotes, getStarWarsQuote(),"src/main/resources/happyFile.json");
 
     }
 
@@ -29,8 +25,11 @@ public class App {
 
         public static String getStarWarsQuote() throws IOException {
         URL starWarsQuotesAPIURL= new URL("http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote");
+//        opens a new connection to Star Wars Data
         HttpURLConnection connection = (HttpURLConnection) starWarsQuotesAPIURL.openConnection();
+//        take in the new data
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//       build the new string from incoming data
         StringBuilder data =new StringBuilder();
         String line = reader.readLine();
         System.out.println(line.toString());
@@ -39,6 +38,7 @@ public class App {
             line = reader.readLine();
         }
         data.toString();
+//        modify the quote to match expected field in or json
 //        https://stackoverflow.com/questions/40910779/how-to-remove-all-characters-before-a-specific-character-in-java/40910835
         String modData = data.substring(data.indexOf(",")+1);
             System.out.println(modData +" after sub");
@@ -47,23 +47,34 @@ public class App {
         }
 
 
-
-        public static Quote[] addQuote(Quote[] arr, String newQoute){
-            Quote[] extendedQuoteArray = new Quote [arr.length+1];
+//    Method that
+        public static void  addQuote (Quote[] arr, String newQoute, String filePath) throws IOException {
+//            make a new quote array with the  new quote
+        Quote[] extendedQuoteArray = new Quote [arr.length+1];
+                for(int i = 0; i<arr.length;i++) {
+                    extendedQuoteArray[i]=arr[i];
+                }
             Gson gson = new Gson();
-            System.out.println(newQoute);
-            Quote quoteToadd = gson.fromJson(newQoute, Quote.class);
-            extendedQuoteArray[extendedQuoteArray.length-1] = quoteToadd;
-            return extendedQuoteArray;
+            Quote quoteToAdd = gson.fromJson(newQoute, Quote.class);
+            extendedQuoteArray[extendedQuoteArray.length-1] = quoteToAdd;
+//            Write the new data to a new File
+            FileOutputStream llama = new FileOutputStream(filePath);
+            llama.write(gson.toJson(extendedQuoteArray).getBytes());
+            llama.close();
         };
 
 
+
+//    Method to parse a Json file in to an array of Quotes
         public static Quote[] gsonify(String filePath) throws IOException {
             Gson gson = new Gson();
+//            Creates a new array of type Quotes then for each Json object an array index is created and a quote is inserted at that index.
             Quote[] quoteArr = gson.fromJson(new String(Files.readAllBytes(Paths.get(filePath))), Quote[].class);
             return quoteArr;
     }
 
+
+//    Method that returns a random quote
         public static Quote random(Quote[] arr){
             int indici = (int)(Math.random()*arr.length);
             return arr[indici];
